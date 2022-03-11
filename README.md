@@ -1,73 +1,75 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+    <img src="https://pparchery.wipplingerconsulting.at/ressources/assets/images/logo.svg" width="320" alt="Nest Logo" />
+</p>
+<p align="center">
+    <a href="#getting-started">Getting Started</a> |
+    <a href="#ressourcen">Ressourcen</a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<hr/>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Dieses Repository enthält die Accurate REST API. Die API basiert auf dem [NestJS](nestjs-docs) Framework
+und die Verbindung zur MariaDB Datenbank läuft über [Prisma](prisma-docs).
 
-## Description
+## Getting Started
+Um das Projekt lokal zum Laufen zu bringen, müssen zuerst einige Dinge eingerichtet werden. 
+Eine kurze Anleitung findest du in diesem Abschnitt.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 0. Development Tools installieren (falls noch nicht vorhanden)
+Wir arbeiten mit Yarn da es von der Performance her besser ist als NPM. Um Yarn zu installieren,
+müssen wir zuerst NPM installieren da Yarn darauf aufbaut. NPM kann auf der [Node.js Website](nodejs-download)
+heruntergeladen werden. Sollten irgendein Problem auftreten kannst du mir auf Discord schreiben (`Nikkl#0001`).
 
-## Installation
-
-```bash
-$ npm install
+Nach der Installation kannst du Yarn installieren:
+```shell
+C:\Users\FixiHartmann\accurate-backend> npm install --global yarn
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+Zu guter Letzt müssen wir noch das Prisma CLI installieren:
+```shell
+C:\Users\FixiHartmann\accurate-backend> yarn global add prisma
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### 1. Packages installieren
+Jetzt müssen wir die Packages für dieses Projekt mit folgendem Befehl installieren:
+```shell
+C:\Users\FixiHartmann\accurate-backend> yarn install
 ```
 
-## Support
+### 2. Dotenv File
+Im `.env` File kann das Projekt konfiguriert werden. Da es Best Practice ist, keine sensiblen 
+Daten in einem Repository zu speichern wird das `.env` File von git ignoriert. Es befindet sich
+im Projekt Root bereits die `.env.example` Datei, diese kopieren wir jetzt, nennen die 
+Kopie `.env` und passen dann den Inhalt an.
+```shell
+C:\Users\FixiHartmann\accurate-backend> copy .env.example .env
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 3. Schema von der DB herunterladen
+Dieser Befehl sollte jedes Mal ausgeführt werden, wenn sich am DB Schema irgendwas 
+geändert hat.
 
-## Stay in touch
+```shell
+C:\Users\FixiHartmann\accurate-backend> prisma db pull
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Ressourcen
+Es wäre vom Vorteil sich mindestens die grundlegende Dokumentation durchzulesen.
 
-## License
+### Grundlegend NestJS
+- [Introduction](https://docs.nestjs.com/)
+- [First Steps](https://docs.nestjs.com/first-steps)
+- [Controllers](https://docs.nestjs.com/controllers)
+- [Providers](https://docs.nestjs.com/providers)
+- [Modules](https://docs.nestjs.com/modules)
 
-Nest is [MIT licensed](LICENSE).
+### Grundlegend Prisma
+- [What is Prisma?](https://www.prisma.io/docs/concepts/overview/what-is-prisma)
+- [Prisma - generate](https://www.prisma.io/docs/reference/api-reference/command-reference#generate)
+- [Prisma - db pull](https://www.prisma.io/docs/reference/api-reference/command-reference#db-pull)
+- [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client)
+
+[accurate-logo]: https://pparchery.wipplingerconsulting.at/ressources/assets/images/logo.svg
+[prisma-docs]: https://www.prisma.io/docs/
+[nestjs-docs]: https://docs.nestjs.com/
+[nodejs-download]: https://nodejs.org/en/download/
