@@ -8,8 +8,8 @@
 
 <hr/>
 
-Dieses Repository enthält die Accurate REST API. Die API basiert auf dem [NestJS](nestjs-docs) Framework
-und die Verbindung zur MariaDB Datenbank läuft über [Prisma](prisma-docs).
+Dieses Repository enthält die Accurate REST API. Die API basiert auf dem [NestJS](https://docs.nestjs.com/) Framework
+und die Verbindung zur MariaDB Datenbank läuft über [Prisma](https://www.prisma.io/).
 
 ## Getting Started
 Um das Projekt lokal zum Laufen zu bringen, müssen zuerst einige Dinge eingerichtet werden. 
@@ -17,7 +17,7 @@ Eine kurze Anleitung findest du in diesem Abschnitt.
 
 ### 0. Development Tools installieren (falls noch nicht vorhanden)
 Wir arbeiten mit Yarn da es von der Performance her besser ist als NPM. Um Yarn zu installieren,
-müssen wir zuerst NPM installieren da Yarn darauf aufbaut. NPM kann auf der [Node.js Website](nodejs-download)
+müssen wir zuerst NPM installieren da Yarn darauf aufbaut. NPM kann auf der [Node.js Website](https://nodejs.org/en/download/)
 heruntergeladen werden. Sollten irgendein Problem auftreten kannst du mir auf Discord schreiben (`Nikkl#0001`).
 
 Nach der Installation kannst du Yarn installieren:
@@ -68,8 +68,3 @@ Es wäre vom Vorteil sich mindestens die grundlegende Dokumentation durchzulesen
 - [Prisma - generate](https://www.prisma.io/docs/reference/api-reference/command-reference#generate)
 - [Prisma - db pull](https://www.prisma.io/docs/reference/api-reference/command-reference#db-pull)
 - [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client)
-
-[accurate-logo]: https://pparchery.wipplingerconsulting.at/ressources/assets/images/logo.svg
-[prisma-docs]: https://www.prisma.io/docs/
-[nestjs-docs]: https://docs.nestjs.com/
-[nodejs-download]: https://nodejs.org/en/download/
