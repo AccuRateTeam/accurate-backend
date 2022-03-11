@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id String @id @default(cuid())
+  user_name String @db.VarChar(16)
+  user_email String @unique @db.VarChar(255)
+
+  results Result[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Event {
+  event_id String @id @default(cuid())
+  event_name String @db.VarChar(45)
+
+  results Result[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Result {
+  result_id String @id @default(cuid())
+  result_points String @db.VarChar(45)
+
+  user User @relation(fields: [user_id], references: [user_id])
+  user_id String
+
+  event Event @relation(fields: [event_id], references: [event_id])
+  event_id String
+
+  target Target @relation(fields: [target_id], references: [target_id])
+  target_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Target {
+  target_id String @id @default(cuid())
+  target_name String @db.VarChar(45)
+  target_distance1 String @db.VarChar(45)
+  target_distance2 String @db.VarChar(45)
+  target_distance3 String @db.VarChar(45)
+
+  results Result[]
+  parcours ParcourHasTarget[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Parcour {
+  parcour_id String @id @default(cuid())
+
+  targets ParcourHasTarget[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ParcourHasTarget {
+  parcour Parcour     @relation(fields: [parcour_id], references: [parcour_id])
+  parcour_id String
+
+  target Target @relation(fields: [target_id], references: [target_id])
+  target_id String
+
+  assignedAt DateTime @default(now())
+  @@id([parcour_id, target_id])
+}
