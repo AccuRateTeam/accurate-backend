@@ -18,7 +18,7 @@ Eine kurze Anleitung findest du in diesem Abschnitt.
 ### 0. Development Tools installieren (falls noch nicht vorhanden)
 Wir arbeiten mit Yarn da es von der Performance her besser ist als NPM. Um Yarn zu installieren,
 müssen wir zuerst NPM installieren da Yarn darauf aufbaut. NPM kann auf der [Node.js Website](https://nodejs.org/en/download/)
-heruntergeladen werden. Sollten irgendein Problem auftreten kannst du mir auf Discord schreiben (`Nikkl#0001`).
+heruntergeladen werden. Sollte irgendein Problem auftreten kannst du mir auf Discord schreiben (`Nikkl#0001`).
 
 Nach der Installation kannst du Yarn installieren:
 ```shell
