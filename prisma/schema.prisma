@@ -8,7 +8,7 @@ datasource db {
 }
 
 model event {
-  event_id         Int       @id @default(autoincrement())
+  event_id         String    @id @db.VarChar(45) @default(cuid())
   event_name       String?   @db.VarChar(45)
   event_createtime DateTime? @default(now()) @db.DateTime(0)
   event_updatetime DateTime? @db.DateTime(0) @updatedAt
@@ -16,7 +16,7 @@ model event {
 }
 
 model parcour {
-  parcour_id         Int              @id @default(autoincrement())
+  parcour_id         String           @id @db.VarChar(45) @default(cuid())
   parcour_name       String?          @db.VarChar(45)
   parcour_createtime DateTime?        @default(now()) @db.DateTime(0)
   parcour_updatetime DateTime?        @db.DateTime(0) @updatedAt
@@ -24,8 +24,8 @@ model parcour {
 }
 
 model parcour_target {
-  parcour_id Int
-  target_id  Int
+  parcour_id String  @db.VarChar(45)
+  target_id  String  @db.VarChar(45)
   parcour    parcour @relation(fields: [parcour_id], references: [parcour_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parcour_has_target_parcour1")
   target     target  @relation(fields: [target_id], references: [target_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parcour_has_target_target1")
 
@@ -35,13 +35,13 @@ model parcour_target {
 }
 
 model result {
-  result_id         Int       @id @default(autoincrement())
+  result_id         String    @id @db.VarChar(45) @default(cuid())
   result_points     String    @db.VarChar(45)
-  event_id          Int
-  target_id         Int
-  user_id           Int
+  event_id          String    @db.VarChar(45)
+  target_id         String    @db.VarChar(45)
+  user_id           String    @db.VarChar(45)
   result_createtime DateTime? @default(now()) @db.DateTime(0)
-  result_updatetime  DateTime? @db.DateTime(0) @updatedAt
+  result_updatetime DateTime? @db.DateTime(0) @updatedAt
   event             event     @relation(fields: [event_id], references: [event_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_event")
   target            target    @relation(fields: [target_id], references: [target_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_target1")
   user              user      @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_user1")
@@ -52,7 +52,7 @@ model result {
 }
 
 model target {
-  target_id         Int              @id @default(autoincrement())
+  target_id         String           @id @db.VarChar(45) @default(cuid())
   target_name       String?          @db.VarChar(45)
   target_distance1  Int?
   target_distance2  Int?
@@ -64,7 +64,7 @@ model target {
 }
 
 model user {
-  user_id         Int       @id @default(autoincrement())
+  user_id         String    @id @db.VarChar(45) @default(cuid())
   user_auth_id    String    @db.VarChar(45) @unique
   user_name       String    @db.VarChar(16)
   user_email      String?   @db.VarChar(255)

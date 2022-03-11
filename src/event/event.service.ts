@@ -19,7 +19,7 @@ export class EventService {
     });
   }
 
-  public async updateEvent(eventDto: UpdateEventDto, eventId: number): Promise<event> {
+  public async updateEvent(eventDto: UpdateEventDto, eventId: string): Promise<event> {
     if (!(await this.findEvent(eventId))) {
       throw new HttpException('User konnte nicht gefunden werden.', 400);
     }
@@ -34,7 +34,7 @@ export class EventService {
     });
   }
 
-  public async findEvent(eventId: number): Promise<event> {
+  public async findEvent(eventId: string): Promise<event> {
     return await this.prisma.event.findFirst({
       where: {
         event_id: eventId
@@ -42,7 +42,7 @@ export class EventService {
     });
   }
 
-  public async deleteEvent(eventId: number): Promise<event> {
+  public async deleteEvent(eventId: string): Promise<event> {
     if (!(await this.findEvent(eventId))) {
       throw new HttpException('User konnte nicht gefunden werden.', 400);
     }
