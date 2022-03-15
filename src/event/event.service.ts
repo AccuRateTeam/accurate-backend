@@ -14,7 +14,8 @@ export class EventService {
   public async createEvent(eventDto: CreateEventDto): Promise<event> {
     return await this.prisma.event.create({
       data: {
-        event_name: eventDto.event_name
+        event_name: eventDto.event_name,
+        parcour_parcour_id: eventDto.parcour_id
       }
     });
   }

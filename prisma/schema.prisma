@@ -8,18 +8,23 @@ datasource db {
 }
 
 model event {
-  event_id         String    @id @db.VarChar(45) @default(cuid())
-  event_name       String?   @db.VarChar(45)
-  event_createtime DateTime? @default(now()) @db.DateTime(0)
-  event_updatetime DateTime? @db.DateTime(0) @updatedAt
-  result           result[]
+  event_id           String       @id @default(cuid()) @db.VarChar(45)
+  event_name         String?      @db.VarChar(45)
+  parcour_parcour_id String       @db.VarChar(45)
+  event_createtime   DateTime?    @default(now()) @db.DateTime(0)
+  event_updatetime   DateTime?    @default(now()) @updatedAt @db.DateTime(0)
+  parcour            parcour      @relation(fields: [parcour_parcour_id], references: [parcour_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event_parcour")
+  event_user         event_user[]
+
+  @@index([parcour_parcour_id], map: "fk_event_parcour_idx")
 }
 
 model parcour {
-  parcour_id         String           @id @db.VarChar(45) @default(cuid())
+  parcour_id         String           @id @default(cuid()) @db.VarChar(45)
   parcour_name       String?          @db.VarChar(45)
   parcour_createtime DateTime?        @default(now()) @db.DateTime(0)
-  parcour_updatetime DateTime?        @db.DateTime(0) @updatedAt
+  parcour_updatetime DateTime?        @default(now()) @updatedAt @db.DateTime(0)
+  event              event[]
   parcour_target     parcour_target[]
 }
 
@@ -36,19 +41,16 @@ model parcour_target {
 
 model result {
   result_id         String    @id @db.VarChar(45) @default(cuid())
-  result_points     String    @db.VarChar(45)
-  event_id          String    @db.VarChar(45)
-  target_id         String    @db.VarChar(45)
-  user_id           String    @db.VarChar(45)
+  result_points     String?   @db.VarChar(45)
+  target_target_id  String    @db.VarChar(45)
+  user_user_id      String    @db.VarChar(45)
   result_createtime DateTime? @default(now()) @db.DateTime(0)
-  result_updatetime DateTime? @db.DateTime(0) @updatedAt
-  event             event     @relation(fields: [event_id], references: [event_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_event")
-  target            target    @relation(fields: [target_id], references: [target_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_target1")
-  user              user      @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_user1")
+  result_updatetime DateTime? @default(now()) @updatedAt @db.DateTime(0)
+  target            target    @relation(fields: [target_target_id], references: [target_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_target1")
+  user              user      @relation(fields: [user_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_result_user1")
 
-  @@index([event_id], map: "fk_result_event_idx")
-  @@index([target_id], map: "fk_result_target1_idx")
-  @@index([user_id], map: "fk_result_user1_idx")
+  @@index([target_target_id], map: "fk_result_target1_idx")
+  @@index([user_user_id], map: "fk_result_user1_idx")
 }
 
 model target {
@@ -58,17 +60,29 @@ model target {
   target_distance2  Int?
   target_distance3  Int?
   target_createtime DateTime?        @default(now()) @db.DateTime(0)
-  target_updatetime DateTime?        @db.DateTime(0) @updatedAt
+  target_updatetime DateTime?        @default(now()) @updatedAt @db.DateTime(0)
   parcour_target    parcour_target[]
   result            result[]
 }
 
 model user {
-  user_id         String    @id @db.VarChar(45) @default(cuid())
-  user_auth_id    String    @db.VarChar(45) @unique
-  user_name       String    @db.VarChar(16)
-  user_email      String?   @db.VarChar(255)
-  user_createtime DateTime? @default(now()) @db.DateTime(0)
-  user_updatetime DateTime? @db.DateTime(0) @updatedAt
+  user_id         String       @id @db.VarChar(45) @default(cuid())
+  user_auth_id    String?      @unique(map: "user_auth_id_UNIQUE") @db.VarChar(45)
+  user_name       String?      @db.VarChar(16)
+  user_email      String?      @db.VarChar(255)
+  user_createtime DateTime?    @default(now()) @db.DateTime(0)
+  user_updatetime DateTime?    @default(now()) @updatedAt @db.DateTime(0)
+  event_user      event_user[]
   result          result[]
+}
+
+model event_user {
+  event_id String @db.VarChar(45) @default(cuid())
+  user_id  String @db.VarChar(45)
+  event    event  @relation(fields: [event_id], references: [event_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event_has_user_event1")
+  user     user   @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event_has_user_user1")
+
+  @@id([event_id, user_id])
+  @@index([event_id], map: "fk_event_has_user_event1_idx")
+  @@index([user_id], map: "fk_event_has_user_user1_idx")
 }
