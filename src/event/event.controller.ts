@@ -4,7 +4,6 @@ import { event } from "@prisma/client";
 import { EventService } from "./event.service";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
-import {AuthzUser} from "../authz-user.decorator";
 import {AuthzId} from "../authz-id.decorator";
 import {UserService} from "../user/user.service";
 import {EventEmitter2} from "@nestjs/event-emitter";
@@ -16,28 +15,6 @@ export class EventController {
     private userService: UserService,
     private emitter: EventEmitter2
   ) {
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Post(':id/join')
-  async joinEvent(@Param('id') id: string, @AuthzId() authId): Promise<event> {
-    if (!(await this.userService.findUser(authId))) {
-      throw new HttpException('User konnte nicht gefunden werden.', 404);
-    }
-    const result = await this.eventService.addUserToEvent(id, (await this.userService.findUser(authId)).user_id);
-    this.emitter.emit('event.user.joined', result);
-    return result;
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Delete(':id/leave')
-  async leaveEvent(@Param('id') id: string, @AuthzId() authId): Promise<event> {
-    if (!(await this.userService.findUser(authId))) {
-      throw new HttpException('User konnte nicht gefunden werden.', 404);
-    }
-    const result = await this.eventService.removeUserFromEvent(id, (await this.userService.findUser(authId)).user_id);
-    this.emitter.emit('event.user.left', result);
-    return result;
   }
 
   @UseGuards(AuthGuard('jwt'))

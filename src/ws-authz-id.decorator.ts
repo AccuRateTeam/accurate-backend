@@ -1,9 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const AuthzUser = createParamDecorator(
+export const WsAuthzId = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
-    const id = ctx.switchToHttp().getRequest().user.sub;
-
-
+    return ctx.switchToWs().getClient().handshake.user.sub;
   },
 );

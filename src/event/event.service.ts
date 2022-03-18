@@ -78,6 +78,15 @@ export class EventService {
     });
   }
 
+  public async userInEvent(eventId: string, userId: string): Promise<boolean> {
+    return !!(await this.prisma.event_user.findFirst({
+      where: {
+        user_id: userId,
+        event_id: eventId
+      }
+    }))
+  }
+
   public async createEvent(eventDto: CreateEventDto): Promise<event> {
     if (!(await this.parcourService.findParcour((eventDto.parcour_id)))) {
       throw new HttpException('Parkour konnte nicht gefunden werden.', 404);
