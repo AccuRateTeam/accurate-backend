@@ -1,10 +1,10 @@
-import {Body, Controller, Delete, Get, HttpException, Patch, Post, UseGuards} from "@nestjs/common";
+import {Body, Controller, Get, HttpException, Patch, Post, UseGuards} from "@nestjs/common";
 import { user } from "@prisma/client";
-import { AuthGuard } from "@nestjs/passport";
 import { AuthzId } from "../authz-id.decorator";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import {HttpGuard} from '../http.guard';
 
 @Controller('user')
 export class UserController {
@@ -13,7 +13,7 @@ export class UserController {
   ) {
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(HttpGuard)
   @Get()
   async ownUser(@AuthzId() authId): Promise<user> {
     const user = this.userService.findUser(authId);
@@ -24,13 +24,13 @@ export class UserController {
     return user;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(HttpGuard)
   @Post()
   async createUser(@Body() userDto: CreateUserDto, @AuthzId() authId): Promise<user> {
     return await this.userService.createUser(userDto, userDto.user_email, authId);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(HttpGuard)
   @Patch()
   async updateUser(@Body() userDto: UpdateUserDto, @AuthzId() authId): Promise<user> {
     return this.userService.updateUser(userDto, authId);

@@ -1,10 +1,9 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { user, event } from "@prisma/client";
+import { event } from "@prisma/client";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import {ParcourService} from "../parcour/parcour.service";
-import {UserService} from "../user/user.service";
 
 @Injectable()
 export class EventService {
@@ -18,6 +17,7 @@ export class EventService {
     if (!(await this.findEvent(eventId, false))) {
       throw new HttpException('Event konnte nicht gefunden werden.', 404);
     }
+
     return this.prisma.event.update({
       where: {
         event_id: eventId

@@ -1,8 +1,6 @@
 import {HttpException, Injectable} from '@nestjs/common';
 import {PrismaService} from "../prisma.service";
-import {CreateEventDto} from "../event/dto/create-event.dto";
 import {parcour} from "@prisma/client";
-import {UpdateEventDto} from "../event/dto/update-event.dto";
 import {CreateParcourDto} from "./dto/create-parcour.dto";
 import {UpdateParcourDto} from "./dto/update-parcour.dto";
 

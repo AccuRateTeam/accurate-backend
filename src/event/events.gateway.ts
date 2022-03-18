@@ -1,16 +1,14 @@
 import {
     WebSocketGateway,
     WebSocketServer,
-    OnGatewayConnection,
     SubscribeMessage,
-    MessageBody, WsResponse, ConnectedSocket, WsException
+    MessageBody, ConnectedSocket, WsException
 } from "@nestjs/websockets";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {event as Event} from "@prisma/client";
 import {Server, Socket} from "socket.io";
 import {WsGuard} from "../ws.guard";
-import {HttpException, UseGuards} from "@nestjs/common";
-import {AuthzId} from "../authz-id.decorator";
+import {UseGuards} from "@nestjs/common";
 import {WsAuthzId} from "../ws-authz-id.decorator";
 import {EventService} from "./event.service";
 import {UserService} from "../user/user.service";
