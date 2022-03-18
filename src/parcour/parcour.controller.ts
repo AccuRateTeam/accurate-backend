@@ -3,7 +3,7 @@ import {parcour} from "@prisma/client";
 import {ParcourService} from "./parcour.service";
 import {CreateParcourDto} from "./dto/create-parcour.dto";
 import {UpdateParcourDto} from "./dto/update-parcour.dto";
-import {HttpGuard} from '../http.guard';
+import {HttpGuard} from '../authz/http.guard';
 
 @Controller('parcour')
 export class ParcourController {

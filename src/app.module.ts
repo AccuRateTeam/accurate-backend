@@ -4,6 +4,7 @@ import {UserModule} from './user/user.module';
 import {EventModule} from './event/event.module';
 import { ParcourModule } from './parcour/parcour.module';
 import {EventEmitterModule} from "@nestjs/event-emitter";
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
     imports: [
@@ -11,7 +12,8 @@ import {EventEmitterModule} from "@nestjs/event-emitter";
         AuthzModule,
         UserModule,
         EventModule,
-        ParcourModule
+        ParcourModule,
+        LoggerModule
     ],
     controllers: [],
     providers: [],

@@ -4,11 +4,15 @@ import { ValidationPipe } from "@nestjs/common";
 import helmet from 'helmet';
 import * as dotenv from 'dotenv';
 import * as csurf from 'csurf';
+import {Logger} from './logger/logger.service';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // custom logger
+  app.useLogger(app.get(Logger));
 
   // use helmet for security
   app.use(helmet());

@@ -1,10 +1,10 @@
 import {Body, Controller, Get, HttpException, Patch, Post, UseGuards} from "@nestjs/common";
 import { user } from "@prisma/client";
-import { AuthzId } from "../authz-id.decorator";
+import { AuthzId } from "../authz/authz-id.decorator";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import {HttpGuard} from '../http.guard';
+import {HttpGuard} from '../authz/http.guard';
 
 @Controller('user')
 export class UserController {

@@ -3,7 +3,7 @@ import { event } from "@prisma/client";
 import { EventService } from "./event.service";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
-import {HttpGuard} from '../http.guard';
+import {HttpGuard} from '../authz/http.guard';
 
 @Controller('event')
 export class EventController {
