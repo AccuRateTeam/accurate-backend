@@ -1,8 +1,9 @@
-import {HttpException, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {PrismaService} from "../prisma.service";
 import {parcour} from "@prisma/client";
 import {CreateParcourDto} from "./dto/create-parcour.dto";
 import {UpdateParcourDto} from "./dto/update-parcour.dto";
+import {ApiException} from '../api.exception';
 
 @Injectable()
 export class ParcourService {
@@ -25,7 +26,7 @@ export class ParcourService {
 
     public async updateParcour(parcourDto: UpdateParcourDto, parcourId: string): Promise<parcour> {
         if (!(await this.findParcour(parcourId))) {
-            throw new HttpException('Parkour konnte nicht gefunden werden.', 400);
+            throw new ApiException('Parkour konnte nicht gefunden werden.', 404);
         }
 
         return await this.prisma.parcour.update({
@@ -39,16 +40,20 @@ export class ParcourService {
     }
 
     public async findParcour(parcourId: string): Promise<parcour> {
-        return await this.prisma.parcour.findFirst({
+        const parcour = await this.prisma.parcour.findFirst({
             where: {
                 parcour_id: parcourId
             }
         });
+        if (!parcour) {
+            throw new ApiException('Event konnte nicht gefunden werden.', 404);
+        }
+        return parcour;
     }
 
     public async deleteParcour(parcourId: string): Promise<parcour> {
         if (!(await this.findParcour(parcourId))) {
-            throw new HttpException('Parkour konnte nicht gefunden werden.', 400);
+            throw new ApiException('Parkour konnte nicht gefunden werden.', 404);
         }
 
         return await this.prisma.parcour.delete({

@@ -13,6 +13,10 @@ import {WsAuthzId} from "../authz/ws-authz-id.decorator";
 import {EventService} from "./event.service";
 import {UserService} from "../user/user.service";
 import {Logger} from '../logger/logger.service';
+import {JoinEventDto} from './dto/join-event.dto';
+import {LeaveEventDto} from './dto/leave-event.dto';
+import {ApiException} from '../api.exception';
+import {WsExceptionHandler} from '../exception.handlers';
 
 @WebSocketGateway(4000)
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -36,10 +40,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.logger.log(`${client.conn.remoteAddress} (${client.id}) disconnected`);
     }
 
+    // TODO: implement data validation
     @UseGuards(WsGuard)
     @SubscribeMessage('event.room.join')
     async joinEvent(
-        @MessageBody() data: any,
+        @MessageBody() data: JoinEventDto,
         @ConnectedSocket() client: Socket,
         @WsAuthzId() authId
     ): Promise<void> {
@@ -49,22 +54,23 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
 
         // create database relation
-        const result = await this.eventService.addUserToEvent(data.eventId, user.user_id);
+        const result = await this.eventService.addUserToEvent(data.event_id, user.user_id).catch(WsExceptionHandler);
 
         // join socket.io room
-        client.join(data.eventId);
+        client.join(data.event_id);
 
         // log
-        this.logger.log(`User (${user.user_id}) joined Event (${data.eventId})`);
+        this.logger.log(`User (${user.user_id}) joined Event (${data.event_id})`);
 
         // broadcast event
         this.emitter.emit('event.refresh', result);
     }
 
+    // TODO: implement data validation
     @UseGuards(WsGuard)
     @SubscribeMessage('event.room.leave')
     async leaveEvent(
-        @MessageBody() data: any,
+        @MessageBody() data: LeaveEventDto,
         @ConnectedSocket() client: Socket,
         @WsAuthzId() authId
     ): Promise<void> {
@@ -74,16 +80,16 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
 
         // delete database relation
-        const result = await this.eventService.removeUserFromEvent(data.eventId, user.user_id);
-
-        // leave socket.io room
-        client.leave(data.eventId);
+        const result = await this.eventService.removeUserFromEvent(data.event_id, user.user_id).catch(WsExceptionHandler);
 
         // log
-        this.logger.log(`User (${user.user_id}) left Event (${data.eventId})`);
+        this.logger.log(`User (${user.user_id}) left Event (${data.event_id})`);
 
         // broadcast event
         this.emitter.emit('event.refresh', result);
+
+        // leave socket.io room
+        client.leave(data.event_id);
     }
 
     @OnEvent('event.refresh')

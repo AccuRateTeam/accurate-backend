@@ -1,9 +1,10 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { event } from "@prisma/client";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import {ParcourService} from "../parcour/parcour.service";
+import {ApiException} from '../api.exception';
 
 @Injectable()
 export class EventService {
@@ -15,7 +16,7 @@ export class EventService {
 
   public async addUserToEvent(eventId: string, userId: string): Promise<event> {
     if (!(await this.findEvent(eventId, false))) {
-      throw new HttpException('Event konnte nicht gefunden werden.', 404);
+      throw new ApiException('Event konnte nicht gefunden werden.', 404);
     }
 
     return this.prisma.event.update({
@@ -54,7 +55,7 @@ export class EventService {
         user_id: userId
       }
     }))) {
-      throw new HttpException('Der User befindet sich nicht in diesem Event.', 404);
+      throw new ApiException('Der User befindet sich nicht in diesem Event.', 404);
     }
     await this.prisma.event_user.delete({
       where: {
@@ -89,7 +90,7 @@ export class EventService {
 
   public async createEvent(eventDto: CreateEventDto): Promise<event> {
     if (!(await this.parcourService.findParcour((eventDto.parcour_id)))) {
-      throw new HttpException('Parkour konnte nicht gefunden werden.', 404);
+      throw new ApiException('Parkour konnte nicht gefunden werden.', 404);
     }
 
     return await this.prisma.event.create({
@@ -102,7 +103,7 @@ export class EventService {
 
   public async updateEvent(eventDto: UpdateEventDto, eventId: string): Promise<event> {
     if (!(await this.findEvent(eventId))) {
-      throw new HttpException('Event konnte nicht gefunden werden.', 404);
+      throw new ApiException('Event konnte nicht gefunden werden.', 404);
     }
 
     return await this.prisma.event.update({
@@ -116,7 +117,7 @@ export class EventService {
   }
 
   public async findEvent(eventId: string, withParcour: boolean = true): Promise<event> {
-    return await this.prisma.event.findFirst({
+    const event = await this.prisma.event.findFirst({
       where: {
         event_id: eventId
       },
@@ -124,11 +125,15 @@ export class EventService {
         parcour: true
       }
     });
+    if (!event) {
+      throw new ApiException('Event konnte nicht gefunden werden.', 404);
+    }
+    return event;
   }
 
   public async deleteEvent(eventId: string): Promise<event> {
     if (!(await this.findEvent(eventId))) {
-      throw new HttpException('Event konnte nicht gefunden werden.', 400);
+      throw new ApiException('Event konnte nicht gefunden werden.', 404);
     }
 
     return await this.prisma.event.delete({
