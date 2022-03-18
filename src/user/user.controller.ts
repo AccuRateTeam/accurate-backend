@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post, UseGuards } from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpException, Patch, Post, UseGuards} from "@nestjs/common";
 import { user } from "@prisma/client";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthzId } from "../authz-id.decorator";
@@ -16,24 +16,23 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async ownUser(@AuthzId() authId): Promise<user> {
-    return this.userService.findUser(authId);
+    const user = this.userService.findUser(authId);
+    if (!user) {
+      throw new HttpException('User konnte nicht gefunden werden.', 404);
+    }
+
+    return user;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async createUser(@Body() userDto: CreateUserDto, @AuthzId() authId): Promise<user> {
-    return await this.userService.createUser(userDto, 'max@mustermann.com', authId);
+    return await this.userService.createUser(userDto, userDto.user_email, authId);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch()
   async updateUser(@Body() userDto: UpdateUserDto, @AuthzId() authId): Promise<user> {
     return this.userService.updateUser(userDto, authId);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Delete()
-  async deleteUser(@AuthzId() authId): Promise<user> {
-    return this.userService.deleteUser(authId);
   }
 }

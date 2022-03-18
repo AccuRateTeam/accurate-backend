@@ -3,15 +3,86 @@ import { PrismaService } from "../prisma.service";
 import { user, event } from "@prisma/client";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
+import {ParcourService} from "../parcour/parcour.service";
+import {UserService} from "../user/user.service";
 
 @Injectable()
 export class EventService {
   constructor(
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private parcourService: ParcourService
   ) {
   }
 
+  public async addUserToEvent(eventId: string, userId: string): Promise<event> {
+    if (!(await this.findEvent(eventId, false))) {
+      throw new HttpException('Event konnte nicht gefunden werden.', 404);
+    }
+    return this.prisma.event.update({
+      where: {
+        event_id: eventId
+      },
+      data: {
+        event_user: {
+          connectOrCreate: {
+            where: {
+              event_id_user_id: {
+                event_id: eventId,
+                user_id: userId
+              }
+            },
+            create: {
+              user_id: userId
+            }
+          }
+        }
+      },
+      include: {
+        event_user: {
+          include: {
+            user: true
+          }
+        }
+      }
+    })
+  }
+
+  public async removeUserFromEvent(eventId: string, userId: string): Promise<event> {
+    if (!(await this.prisma.event_user.findFirst({
+      where: {
+        event_id: eventId,
+        user_id: userId
+      }
+    }))) {
+      throw new HttpException('Der User befindet sich nicht in diesem Event.', 404);
+    }
+    await this.prisma.event_user.delete({
+      where: {
+        event_id_user_id: {
+          event_id: eventId,
+          user_id: userId
+        }
+      }
+    });
+    return this.prisma.event.findFirst({
+      where: {
+        event_id: eventId
+      },
+      include: {
+        event_user: {
+          include: {
+            user: true
+          }
+        }
+      }
+    });
+  }
+
   public async createEvent(eventDto: CreateEventDto): Promise<event> {
+    if (!(await this.parcourService.findParcour((eventDto.parcour_id)))) {
+      throw new HttpException('Parkour konnte nicht gefunden werden.', 404);
+    }
+
     return await this.prisma.event.create({
       data: {
         event_name: eventDto.event_name,
@@ -22,7 +93,7 @@ export class EventService {
 
   public async updateEvent(eventDto: UpdateEventDto, eventId: string): Promise<event> {
     if (!(await this.findEvent(eventId))) {
-      throw new HttpException('User konnte nicht gefunden werden.', 400);
+      throw new HttpException('Event konnte nicht gefunden werden.', 404);
     }
 
     return await this.prisma.event.update({
@@ -35,17 +106,20 @@ export class EventService {
     });
   }
 
-  public async findEvent(eventId: string): Promise<event> {
+  public async findEvent(eventId: string, withParcour: boolean = true): Promise<event> {
     return await this.prisma.event.findFirst({
       where: {
         event_id: eventId
+      },
+      include: {
+        parcour: true
       }
     });
   }
 
   public async deleteEvent(eventId: string): Promise<event> {
     if (!(await this.findEvent(eventId))) {
-      throw new HttpException('User konnte nicht gefunden werden.', 400);
+      throw new HttpException('Event konnte nicht gefunden werden.', 400);
     }
 
     return await this.prisma.event.delete({

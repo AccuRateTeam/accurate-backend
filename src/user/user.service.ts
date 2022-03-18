@@ -16,6 +16,14 @@ export class UserService {
       throw new HttpException('Du hast bereits ein Profil erstellt.', 400)
     }
 
+    if (await this.prisma.user.findFirst({
+      where: {
+        user_email: email
+      }
+    })) {
+      throw new HttpException('Diese E-Mail Adresse wird bereits verwendet.', 400);
+    }
+
     return await this.prisma.user.create({
       data: {
         user_name: userDto.user_name,
