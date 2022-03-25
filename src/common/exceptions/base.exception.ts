@@ -1,5 +1,5 @@
 export class BaseException {
-  constructor({ ...rest }) {
+  constructor({ ...rest } = []) {
     Error.apply(this, rest);
   }
 }
