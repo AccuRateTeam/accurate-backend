@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpException, Patch, Post, UseGuards} from "@nestjs/common";
+import {Body, Controller, Get, HttpException, Param, Patch, Post, UseGuards} from "@nestjs/common";
 import { user } from "@prisma/client";
 import { AuthzId } from "../common/decorators/authz-id.decorator";
 import { UserService } from "./user.service";
@@ -7,6 +7,8 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import {HttpGuard} from '../common/guards/http.guard';
 import {ApiException} from '../common/exceptions/api.exception';
 import {HttpExceptionHandler} from '../common/exception.handlers';
+import {PrivateUser} from "./serializers/private-user.serializer";
+import {PublicUser} from "./serializers/public-user.serializer";
 
 @Controller('user')
 export class UserController {
@@ -15,10 +17,16 @@ export class UserController {
   ) {
   }
 
+  async findUser(@Param('id') id: string): Promise<PublicUser> {
+    const user = await this.userService.findUser(id);
+    if (!user) throw new HttpException('User konnte nicht gefunden werden.', 404);
+    return new PublicUser(user);
+  }
+
   @UseGuards(HttpGuard)
   @Get()
-  async ownUser(@AuthzId() authId): Promise<user> {
-    return this.userService.findUser(authId).catch(HttpExceptionHandler);
+  async ownUser(@AuthzId() authId): Promise<PrivateUser> {
+    return new PrivateUser(await this.userService.findUser(authId).catch(HttpExceptionHandler));
   }
 
   @UseGuards(HttpGuard)
@@ -30,6 +38,6 @@ export class UserController {
   @UseGuards(HttpGuard)
   @Patch()
   async updateUser(@Body() userDto: UpdateUserDto, @AuthzId() authId): Promise<user> {
-    return this.userService.updateUser(userDto, authId).catch(HttpExceptionHandler);
+    return await this.userService.updateUser(authId, userDto).catch(HttpExceptionHandler);
   }
 }

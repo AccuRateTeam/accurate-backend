@@ -1,4 +1,4 @@
-class BaseException {
+export class BaseException {
     constructor() {
         Error.apply(this, arguments);
     }

@@ -12,6 +12,17 @@ export class UserService {
   ) {
   }
 
+  public async findUser(id: string): Promise<user> {
+    return await this.prisma.user.findFirst({
+      where: {
+        OR: {
+          user_id: id,
+          user_auth_id: id,
+        }
+      }
+    });
+  }
+
   public async createUser(userDto: CreateUserDto, email: string, authId: string): Promise<user> {
     if (await this.findUser(authId)) {
       throw new ApiException('Du hast bereits ein Profil erstellt.', 400)
@@ -34,14 +45,15 @@ export class UserService {
     });
   }
 
-  public async updateUser(userDto: UpdateUserDto, authId: string): Promise<user> {
-    if (!(await this.findUser(authId))) {
+  public async updateUser(id: string, userDto: UpdateUserDto): Promise<user> {
+    const user = await this.findUser(id);
+    if (!user) {
       throw new ApiException('User konnte nicht gefunden werden.', 404);
     }
 
     return await this.prisma.user.update({
       where: {
-        user_auth_id: authId,
+        user_id: user.user_id,
       },
       data: {
         user_name: userDto.user_name
@@ -49,26 +61,14 @@ export class UserService {
     });
   }
 
-  public async findUser(authId: string): Promise<user> {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        user_auth_id: authId
-      }
-    });
-    if (!user) {
-      throw new ApiException('Event konnte nicht gefunden werden.', 404);
-    }
-    return user;
-  }
-
-  public async deleteUser(authId: string): Promise<user> {
-    if (!(await this.findUser(authId))) {
+  public async deleteUser(id: string): Promise<user> {
+    if (!(await this.findUser(id))) {
       throw new ApiException('User konnte nicht gefunden werden.', 404);
     }
 
     return await this.prisma.user.delete({
       where: {
-        user_auth_id: authId
+        user_auth_id: id
       }
     });
   }

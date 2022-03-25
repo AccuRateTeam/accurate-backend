@@ -22,7 +22,9 @@ export class ParcourController {
     @UseGuards(HttpGuard)
     @Get(':id')
     async findParcour(@Param('id') id: string): Promise<parcour> {
-        return await this.parcourService.findParcour(id).catch(HttpExceptionHandler);
+        const parcour = await this.parcourService.findParcour(id).catch(HttpExceptionHandler);
+        if (!parcour) throw new HttpException('Parkour konnte nicht gefunden werden.', 404);
+        return parcour;
     }
 
     @UseGuards(HttpGuard)
@@ -34,7 +36,7 @@ export class ParcourController {
     @UseGuards(HttpGuard)
     @Patch(':id')
     async updateParcour(@Body() parcourDto: UpdateParcourDto, @Param('id') id: string): Promise<parcour> {
-        return await this.parcourService.updateParcour(parcourDto, id).catch(HttpExceptionHandler);
+        return await this.parcourService.updateParcour(id, parcourDto).catch(HttpExceptionHandler);
     }
 
     @UseGuards(HttpGuard)

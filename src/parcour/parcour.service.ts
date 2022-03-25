@@ -16,6 +16,14 @@ export class ParcourService {
         return await this.prisma.parcour.findMany();
     }
 
+    public async findParcour(parcourId: string): Promise<parcour> {
+        return  await this.prisma.parcour.findFirst({
+            where: {
+                parcour_id: parcourId
+            }
+        });
+    }
+
     public async createParcour(parcourDto: CreateParcourDto): Promise<parcour> {
         return await this.prisma.parcour.create({
             data: {
@@ -24,7 +32,7 @@ export class ParcourService {
         });
     }
 
-    public async updateParcour(parcourDto: UpdateParcourDto, parcourId: string): Promise<parcour> {
+    public async updateParcour(parcourId: string, parcourDto: UpdateParcourDto): Promise<parcour> {
         if (!(await this.findParcour(parcourId))) {
             throw new ApiException('Parkour konnte nicht gefunden werden.', 404);
         }
@@ -37,18 +45,6 @@ export class ParcourService {
                 parcour_name: parcourDto.parcour_name
             }
         });
-    }
-
-    public async findParcour(parcourId: string): Promise<parcour> {
-        const parcour = await this.prisma.parcour.findFirst({
-            where: {
-                parcour_id: parcourId
-            }
-        });
-        if (!parcour) {
-            throw new ApiException('Event konnte nicht gefunden werden.', 404);
-        }
-        return parcour;
     }
 
     public async deleteParcour(parcourId: string): Promise<parcour> {

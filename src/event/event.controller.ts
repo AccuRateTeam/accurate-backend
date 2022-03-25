@@ -14,9 +14,17 @@ export class EventController {
   }
 
   @UseGuards(HttpGuard)
+  @Get()
+  async listEvents(): Promise<event[]> {
+    return await this.eventService.listEvents().catch(HttpExceptionHandler);
+  }
+
+  @UseGuards(HttpGuard)
   @Get(':id')
   async findEvent(@Param('id') id: string): Promise<event> {
-    return await this.eventService.findEvent(id).catch(HttpExceptionHandler);
+    const event = await this.eventService.findEvent(id).catch(HttpExceptionHandler);
+    if (!event) throw new HttpException('Event konnte nicht gefunden werden.', 404);
+    return event;
   }
 
   @UseGuards(HttpGuard)
@@ -28,7 +36,7 @@ export class EventController {
   @UseGuards(HttpGuard)
   @Patch(':id')
   async updateEvent(@Body() eventDto: UpdateEventDto, @Param('id') id: string): Promise<event> {
-    return this.eventService.updateEvent(eventDto, id).catch(HttpExceptionHandler);
+    return this.eventService.updateEvent(id, eventDto).catch(HttpExceptionHandler);
   }
 
   @UseGuards(HttpGuard)

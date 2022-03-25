@@ -14,8 +14,63 @@ export class EventService {
   ) {
   }
 
+  public async listEvents(): Promise<event[]> {
+    return await this.prisma.event.findMany();
+  }
+
+  public async findEvent(eventId: string): Promise<event> {
+    return await this.prisma.event.findFirst({
+      where: {
+        event_id: eventId
+      },
+      include: {
+        parcour: true
+      }
+    });
+  }
+
+  public async createEvent(eventDto: CreateEventDto): Promise<event> {
+    if (!(await this.parcourService.findParcour((eventDto.parcour_id)))) {
+      throw new ApiException('Parkour konnte nicht gefunden werden.', 404);
+    }
+
+    return await this.prisma.event.create({
+      data: {
+        event_name: eventDto.event_name,
+        parcour_parcour_id: eventDto.parcour_id
+      }
+    });
+  }
+
+  public async updateEvent(eventId: string, eventDto: UpdateEventDto): Promise<event> {
+    if (!(await this.findEvent(eventId))) {
+      throw new ApiException('Event konnte nicht gefunden werden.', 404);
+    }
+
+    return await this.prisma.event.update({
+      where: {
+        event_id: eventId
+      },
+      data: {
+        event_name: eventDto.event_name
+      }
+    });
+  }
+
+  public async deleteEvent(eventId: string): Promise<event> {
+    if (!(await this.findEvent(eventId))) {
+      throw new ApiException('Event konnte nicht gefunden werden.', 404);
+    }
+
+    return await this.prisma.event.delete({
+      where: {
+        event_id: eventId
+      }
+    });
+  }
+
   public async addUserToEvent(eventId: string, userId: string): Promise<event> {
-    if (!(await this.findEvent(eventId, false))) {
+    if (!(await this.findEvent(eventId))) {
       throw new ApiException('Event konnte nicht gefunden werden.', 404);
     }
 
@@ -86,60 +141,5 @@ export class EventService {
         event_id: eventId
       }
     }))
-  }
-
-  public async createEvent(eventDto: CreateEventDto): Promise<event> {
-    if (!(await this.parcourService.findParcour((eventDto.parcour_id)))) {
-      throw new ApiException('Parkour konnte nicht gefunden werden.', 404);
-    }
-
-    return await this.prisma.event.create({
-      data: {
-        event_name: eventDto.event_name,
-        parcour_parcour_id: eventDto.parcour_id
-      }
-    });
-  }
-
-  public async updateEvent(eventDto: UpdateEventDto, eventId: string): Promise<event> {
-    if (!(await this.findEvent(eventId))) {
-      throw new ApiException('Event konnte nicht gefunden werden.', 404);
-    }
-
-    return await this.prisma.event.update({
-      where: {
-        event_id: eventId
-      },
-      data: {
-        event_name: eventDto.event_name
-      }
-    });
-  }
-
-  public async findEvent(eventId: string, withParcour: boolean = true): Promise<event> {
-    const event = await this.prisma.event.findFirst({
-      where: {
-        event_id: eventId
-      },
-      include: {
-        parcour: true
-      }
-    });
-    if (!event) {
-      throw new ApiException('Event konnte nicht gefunden werden.', 404);
-    }
-    return event;
-  }
-
-  public async deleteEvent(eventId: string): Promise<event> {
-    if (!(await this.findEvent(eventId))) {
-      throw new ApiException('Event konnte nicht gefunden werden.', 404);
-    }
-
-    return await this.prisma.event.delete({
-      where: {
-        event_id: eventId
-      }
-    });
   }
 }
