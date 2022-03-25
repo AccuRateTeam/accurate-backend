@@ -1,4 +1,4 @@
-import {ApiException} from './api.exception';
+import {ApiException} from './exceptions/api.exception';
 import {HttpException} from '@nestjs/common';
 import {WsException} from '@nestjs/websockets';
 

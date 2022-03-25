@@ -1,12 +1,12 @@
 import {Body, Controller, Get, HttpException, Patch, Post, UseGuards} from "@nestjs/common";
 import { user } from "@prisma/client";
-import { AuthzId } from "../authz/authz-id.decorator";
+import { AuthzId } from "../common/decorators/authz-id.decorator";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import {HttpGuard} from '../authz/http.guard';
-import {ApiException} from '../api.exception';
-import {HttpExceptionHandler} from '../exception.handlers';
+import {HttpGuard} from '../common/guards/http.guard';
+import {ApiException} from '../common/exceptions/api.exception';
+import {HttpExceptionHandler} from '../common/exception.handlers';
 
 @Controller('user')
 export class UserController {

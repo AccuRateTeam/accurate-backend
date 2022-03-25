@@ -7,16 +7,16 @@ import {
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {event as Event} from "@prisma/client";
 import {Server, Socket} from "socket.io";
-import {WsGuard} from "../authz/ws.guard";
+import {WsGuard} from "../common/guards/ws.guard";
 import {UseGuards} from "@nestjs/common";
-import {WsAuthzId} from "../authz/ws-authz-id.decorator";
+import {WsAuthzId} from "../common/decorators/authz-id.decorator";
 import {EventService} from "./event.service";
 import {UserService} from "../user/user.service";
 import {Logger} from '../logger/logger.service';
 import {JoinEventDto} from './dto/join-event.dto';
 import {LeaveEventDto} from './dto/leave-event.dto';
-import {ApiException} from '../api.exception';
-import {WsExceptionHandler} from '../exception.handlers';
+import {ApiException} from '../common/exceptions/api.exception';
+import {WsExceptionHandler} from '../common/exception.handlers';
 
 @WebSocketGateway(4000)
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {

@@ -5,3 +5,9 @@ export const AuthzId = createParamDecorator(
     return ctx.switchToHttp().getRequest().user.sub;
   },
 );
+
+export const WsAuthzId = createParamDecorator(
+    (data: unknown, ctx: ExecutionContext) => {
+        return ctx.switchToWs().getClient().handshake.user.sub;
+    },
+);

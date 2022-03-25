@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../common/services/prisma.service";
 import { event } from "@prisma/client";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import {ParcourService} from "../parcour/parcour.service";
-import {ApiException} from '../api.exception';
+import {ApiException} from '../common/exceptions/api.exception';
 
 @Injectable()
 export class EventService {

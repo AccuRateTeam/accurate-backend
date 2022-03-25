@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common';
-import {PrismaService} from "../prisma.service";
+import {PrismaService} from "../common/services/prisma.service";
 import {parcour} from "@prisma/client";
 import {CreateParcourDto} from "./dto/create-parcour.dto";
 import {UpdateParcourDto} from "./dto/update-parcour.dto";
-import {ApiException} from '../api.exception';
+import {ApiException} from '../common/exceptions/api.exception';
 
 @Injectable()
 export class ParcourService {
