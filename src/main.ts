@@ -21,11 +21,7 @@ async function bootstrap() {
   // app.use(csurf());
 
   // use validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      disableErrorMessages: true,
-    })
-  );
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(process.env.PORT);
 }
