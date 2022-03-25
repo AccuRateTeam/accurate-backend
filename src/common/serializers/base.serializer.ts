@@ -1,7 +1,7 @@
 export class BaseSerializer<T> {
-    id: string;
+  id: string;
 
-    constructor(partial: Partial<T>) {
-        Object.assign(this, partial);
-    }
+  constructor(partial: Partial<T>) {
+    Object.assign(this, partial);
+  }
 }

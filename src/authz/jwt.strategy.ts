@@ -18,8 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       }),
 
       jwtFromRequest: ExtractJwt.fromExtractors([
-          ExtractJwt.fromHeader('authorization'),
-          ExtractJwt.fromUrlQueryParameter('authorization'),
+        ExtractJwt.fromHeader('authorization'),
+        ExtractJwt.fromUrlQueryParameter('authorization'),
       ]),
       audience: process.env.AUTH0_AUDIENCE,
       issuer: `${process.env.AUTH0_ISSUER_URL}`,

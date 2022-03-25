@@ -1,4 +1,3 @@
-import {ConsoleLogger} from '@nestjs/common';
+import { ConsoleLogger } from '@nestjs/common';
 
-export class Logger extends ConsoleLogger {
-}
+export class Logger extends ConsoleLogger {}

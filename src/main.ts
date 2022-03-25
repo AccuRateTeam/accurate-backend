@@ -1,10 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import * as dotenv from 'dotenv';
-import * as csurf from 'csurf';
-import {Logger} from './logger/logger.service';
+import { Logger } from './logger/logger.service';
 
 dotenv.config();
 
@@ -25,7 +24,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: true,
-    }),
+    })
   );
 
   await app.listen(process.env.PORT);

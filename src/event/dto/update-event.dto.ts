@@ -1,4 +1,4 @@
-import { MaxLength, MinLength } from "class-validator";
+import { MaxLength, MinLength } from 'class-validator';
 
 export class UpdateEventDto {
   @MinLength(3)

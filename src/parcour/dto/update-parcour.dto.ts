@@ -1,4 +1,4 @@
-import { MaxLength, MinLength } from "class-validator";
+import { MaxLength, MinLength } from 'class-validator';
 
 export class UpdateParcourDto {
   @MinLength(3)

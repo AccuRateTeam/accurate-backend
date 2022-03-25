@@ -1,16 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { user } from "@prisma/client";
-import { PrismaService } from "../common/services/prisma.service";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import {ApiException} from '../common/exceptions/api.exception';
+import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { user } from '@prisma/client';
+import { PrismaService } from '../common/services/prisma.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiException } from '../common/exceptions/api.exception';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private prisma: PrismaService
-  ) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   public async findUser(id: string): Promise<user> {
     return await this.prisma.user.findFirst({
@@ -18,30 +15,39 @@ export class UserService {
         OR: {
           user_id: id,
           user_auth_id: id,
-        }
-      }
+        },
+      },
     });
   }
 
-  public async createUser(userDto: CreateUserDto, email: string, authId: string): Promise<user> {
+  public async createUser(
+    userDto: CreateUserDto,
+    email: string,
+    authId: string
+  ): Promise<user> {
     if (await this.findUser(authId)) {
-      throw new ApiException('Du hast bereits ein Profil erstellt.', 400)
+      throw new ApiException('Du hast bereits ein Profil erstellt.', 400);
     }
 
-    if (await this.prisma.user.findFirst({
-      where: {
-        user_email: email
-      }
-    })) {
-      throw new ApiException('Diese E-Mail Adresse wird bereits verwendet.', 400);
+    if (
+      await this.prisma.user.findFirst({
+        where: {
+          user_email: email,
+        },
+      })
+    ) {
+      throw new ApiException(
+        'Diese E-Mail Adresse wird bereits verwendet.',
+        400
+      );
     }
 
     return await this.prisma.user.create({
       data: {
         user_name: userDto.user_name,
         user_email: email,
-        user_auth_id: authId
-      }
+        user_auth_id: authId,
+      },
     });
   }
 
@@ -56,8 +62,8 @@ export class UserService {
         user_id: user.user_id,
       },
       data: {
-        user_name: userDto.user_name
-      }
+        user_name: userDto.user_name,
+      },
     });
   }
 
@@ -68,8 +74,8 @@ export class UserService {
 
     return await this.prisma.user.delete({
       where: {
-        user_auth_id: id
-      }
+        user_auth_id: id,
+      },
     });
   }
 }

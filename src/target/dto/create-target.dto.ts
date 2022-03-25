@@ -1,3 +1,3 @@
-import {UpdateTargetDto} from "./update-target.dto";
+import { UpdateTargetDto } from './update-target.dto';
 
 export class CreateTargetDto extends UpdateTargetDto {}

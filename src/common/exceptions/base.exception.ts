@@ -1,5 +1,5 @@
 export class BaseException {
-    constructor() {
-        Error.apply(this, arguments);
-    }
+  constructor({ ...rest }) {
+    Error.apply(this, rest);
+  }
 }
