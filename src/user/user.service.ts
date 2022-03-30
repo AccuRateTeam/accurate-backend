@@ -12,10 +12,7 @@ export class UserService {
   public async findUser(id: string): Promise<user> {
     return await this.prisma.user.findFirst({
       where: {
-        OR: {
-          user_id: id,
-          user_auth_id: id,
-        },
+        user_auth_id: id,
       },
     });
   }
