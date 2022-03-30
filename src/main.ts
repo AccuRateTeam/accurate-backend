@@ -10,6 +10,8 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+  
   // custom logger
   app.useLogger(app.get(Logger));
 
