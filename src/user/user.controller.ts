@@ -32,9 +32,10 @@ export class UserController {
   @UseGuards(HttpGuard)
   @Get()
   async ownUser(@AuthzId() authId): Promise<PrivateUser> {
-    return new PrivateUser(
-      await this.userService.findUser(authId).catch(HttpExceptionHandler)
-    );
+    const user =  await this.userService.findUser(authId).catch(HttpExceptionHandler);
+    if (!user)
+      throw new HttpException('User konnte nicht gefunden werden.', 404);
+    return new PrivateUser(user);
   }
 
   @UseGuards(HttpGuard)

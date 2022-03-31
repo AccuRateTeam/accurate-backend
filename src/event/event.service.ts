@@ -24,6 +24,11 @@ export class EventService {
       },
       include: {
         parcour: true,
+        event_user: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
   }
@@ -96,6 +101,7 @@ export class EventService {
         },
       },
       include: {
+        parcour: true,
         event_user: {
           include: {
             user: true,
@@ -135,6 +141,7 @@ export class EventService {
         event_id: eventId,
       },
       include: {
+        parcour: true,
         event_user: {
           include: {
             user: true,
