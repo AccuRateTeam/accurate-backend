@@ -50,7 +50,7 @@ Dieser Befehl sollte jedes Mal ausgeführt werden, wenn sich am DB Schema irgend
 geändert hat.
 
 ```shell
-C:\Users\FixiHartmann\accurate-backend> prisma db pull
+C:\Users\FixiHartmann\accurate-backend> prisma db push
 ```
 
 ## Ressourcen
