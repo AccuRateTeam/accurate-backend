@@ -33,6 +33,7 @@ model parcour {
 model parcour_target {
   parcour_id String  @db.VarChar(45)
   target_id  String  @db.VarChar(45)
+  sort Int
   parcour    parcour @relation(fields: [parcour_id], references: [parcour_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parcour_has_target_parcour1")
   target     target  @relation(fields: [target_id], references: [target_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parcour_has_target_target1")
 
