@@ -5,6 +5,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { ParcourService } from '../parcour/parcour.service';
 import { ApiException } from '../common/exceptions/api.exception';
+import {Scoreboard} from './type/scoreboard.type';
 
 @Injectable()
 export class EventService {
@@ -12,6 +13,54 @@ export class EventService {
     private prisma: PrismaService,
     private parcourService: ParcourService
   ) {}
+
+  public async scoreboard(eventId: string): Promise<Scoreboard> {
+    const event = await this.prisma.event.findFirst({
+      where: {
+        event_id: eventId
+      },
+      include: {
+        parcour: {
+          include: {
+            parcour_target: {
+              include: {
+                target: true
+              }
+            }
+          }
+        },
+        result: {
+          include: {
+            user: true
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      throw new ApiException('Event konnte nicht gefunden werden.');
+    }
+
+    const targets = event.parcour.parcour_target.map((item) => item.target);
+    const results = event.result;
+    const output = {
+      targets: targets.map((item) => item.target_name),
+      users: {}
+    };
+
+    targets.forEach((target) => {
+      const targetResults = results.filter((result) => result.target_target_id === target.target_id);
+
+      targetResults.forEach((targetResult) => {
+        if (!output.users[targetResult.user.user_name]) {
+          output.users[targetResult.user.user_name] = [];
+        }
+        output.users[targetResult.user.user_name].push(parseInt(targetResult.result_points));
+      });
+    });
+
+    return output;
+  }
 
   public async listEvents(): Promise<event[]> {
     return await this.prisma.event.findMany();
