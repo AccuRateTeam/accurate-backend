@@ -53,10 +53,13 @@ export class EventService {
       const targetResults = results.filter((result) => result.target_target_id.trim() === target.target_id.trim());
 
       targetResults.forEach((targetResult) => {
-        if (!output.users[targetResult.user.user_name]) {
-          output.users[targetResult.user.user_name] = [];
+        if (!output.users[targetResult.user.user_id]) {
+          output.users[targetResult.user.user_id] = {
+            username: targetResult.user.user_name,
+            scores: []
+          };
         }
-        output.users[targetResult.user.user_name].push(parseInt(targetResult.result_points));
+        output.users[targetResult.user.user_id].scores.push(parseInt(targetResult.result_points));
       });
     });
 
