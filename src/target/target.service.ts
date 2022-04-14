@@ -25,9 +25,6 @@ export class TargetService {
     return await this.prisma.target.create({
       data: {
         target_name: targetDto.target_name,
-        target_distance1: targetDto.target_distance1,
-        target_distance2: targetDto.target_distance2,
-        target_distance3: targetDto.target_distance3,
       },
     });
   }
@@ -46,9 +43,6 @@ export class TargetService {
       },
       data: {
         target_name: targetDto.target_name,
-        target_distance1: targetDto.target_distance1,
-        target_distance2: targetDto.target_distance2,
-        target_distance3: targetDto.target_distance3,
       },
     });
   }

@@ -1,12 +1,5 @@
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import {UpdateParcourDto} from './update-parcour.dto';
 
-export class CreateParcourDto {
-  @IsString({ message: 'Es wurde kein Parkour Name angegeben.' })
-  @MinLength(3, {
-    message: 'Der Parkour Name muss mindestens 3 Zeichen lang sein.',
-  })
-  @MaxLength(45, {
-    message: 'Der Parkour Name darf maximal 45 Zeichen lang sein.',
-  })
-  parcour_name: string;
+export class CreateParcourDto extends UpdateParcourDto {
 }
+

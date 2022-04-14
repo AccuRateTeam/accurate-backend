@@ -21,7 +21,12 @@ import { JoinEventDto } from './dto/join-event.dto';
 import { LeaveEventDto } from './dto/leave-event.dto';
 import { WsExceptionHandler } from '../common/exception.handlers';
 
-@WebSocketGateway(4000)
+@WebSocketGateway(4000, {
+  cors: {
+    origin: '*',
+    methods: '*'
+  }
+})
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger(EventsGateway.name);
 

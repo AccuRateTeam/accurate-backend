@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/services/prisma.service';
-import { event } from '@prisma/client';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
-import { ParcourService } from '../parcour/parcour.service';
-import { ApiException } from '../common/exceptions/api.exception';
+import {Injectable} from '@nestjs/common';
+import {PrismaService} from '../common/services/prisma.service';
+import {event} from '@prisma/client';
+import {CreateEventDto} from './dto/create-event.dto';
+import {UpdateEventDto} from './dto/update-event.dto';
+import {ParcourService} from '../parcour/parcour.service';
+import {ApiException} from '../common/exceptions/api.exception';
 import {Scoreboard} from './type/scoreboard.type';
 
 @Injectable()
@@ -12,7 +12,8 @@ export class EventService {
   constructor(
     private prisma: PrismaService,
     private parcourService: ParcourService
-  ) {}
+  ) {
+  }
 
   public async scoreboard(eventId: string): Promise<Scoreboard> {
     const event = await this.prisma.event.findFirst({
@@ -49,7 +50,7 @@ export class EventService {
     };
 
     targets.forEach((target) => {
-      const targetResults = results.filter((result) => result.target_target_id === target.target_id);
+      const targetResults = results.filter((result) => result.target_target_id.trim() === target.target_id.trim());
 
       targetResults.forEach((targetResult) => {
         if (!output.users[targetResult.user.user_name]) {
@@ -91,6 +92,7 @@ export class EventService {
       data: {
         event_name: eventDto.event_name,
         parcour_parcour_id: eventDto.parcour_id,
+        event_scoringsystem: eventDto.scoring_system
       },
     });
   }

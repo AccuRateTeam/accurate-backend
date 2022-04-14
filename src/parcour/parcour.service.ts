@@ -22,10 +22,39 @@ export class ParcourService {
   }
 
   public async createParcour(parcourDto: CreateParcourDto): Promise<parcour> {
+    const targetIds = [];
+
+    for (const target of parcourDto.targets) {
+      const existingTarget = await this.prisma.target.findFirst({
+        where: {
+          target_name: target.target_name.trim()
+        }
+      });
+
+      targetIds.push(existingTarget?.target_id ?? (await this.prisma.target.create({
+        data: {
+          target_name: target.target_name
+        }
+      })).target_id);
+    }
+
     return await this.prisma.parcour.create({
       data: {
         parcour_name: parcourDto.parcour_name,
+        parcour_target: {
+          create: targetIds.map((item, i) => ({
+            target_id: item,
+            sort: i
+          }))
+        }
       },
+      include: {
+        parcour_target: {
+          include: {
+            target: true
+          }
+        }
+      }
     });
   }
 

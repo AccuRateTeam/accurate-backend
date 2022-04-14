@@ -18,10 +18,8 @@ import { HttpExceptionHandler } from '../common/exception.handlers';
 import {HitDto} from './dto/hit.dto';
 import {PrismaService} from '../common/services/prisma.service';
 import {AuthzId} from '../common/decorators/authz-id.decorator';
-import {ApiException} from '../common/exceptions/api.exception';
 import {UserService} from '../user/user.service';
 import {Scoreboard} from './type/scoreboard.type';
-import {TargetsDto} from './dto/targets.dto';
 
 @Controller('event')
 export class EventController {
@@ -67,37 +65,6 @@ export class EventController {
   @Delete(':id')
   async deleteEvent(@Param('id') id: string): Promise<event> {
     return await this.eventService.deleteEvent(id).catch(HttpExceptionHandler);
-  }
-
-  @UseGuards(HttpGuard)
-  @Post(':id/targets')
-  async targets(@Param(':id') id: string, @Body() targets: TargetsDto): Promise<event> {
-    for (const target of targets.targets) {
-      await this.prismaService.target.create({
-        data: {
-          target_name: target.target_name,
-          target_distance1: target.target_distance1,
-          target_distance2: target.target_distance2,
-          target_distance3: target.target_distance3,
-        }
-      });
-    }
-    return await this.prismaService.event.findFirst({
-      where: {
-        event_id: id
-      },
-      include: {
-        parcour: {
-          include: {
-            parcour_target: {
-              include: {
-                target: true
-              }
-            }
-          }
-        }
-      }
-    });
   }
 
   @UseGuards(HttpGuard)

@@ -10,15 +10,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { HttpGuard } from '../common/guards/http.guard';
-import { target } from '@prisma/client';
+import {event, target} from '@prisma/client';
 import { HttpExceptionHandler } from '../common/exception.handlers';
 import { TargetService } from './target.service';
 import { CreateTargetDto } from './dto/create-target.dto';
 import { UpdateTargetDto } from './dto/update-target.dto';
+import {PrismaService} from '../common/services/prisma.service';
 
 @Controller('target')
 export class TargetController {
-  constructor(private targetService: TargetService) {}
+  constructor(private targetService: TargetService, private prismaService: PrismaService) {}
 
   @UseGuards(HttpGuard)
   @Get()
