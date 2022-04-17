@@ -1,9 +1,13 @@
 export type Scoreboard = {
-  targets: string[];
+  targets: {
+    name: string;
+    id: string;
+  }[];
   users: {
     [username: string]: {
       username: string;
       scores: number[];
     }
-  }
+  },
+  finished: boolean;
 }

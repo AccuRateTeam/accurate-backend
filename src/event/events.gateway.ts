@@ -19,7 +19,8 @@ import { UserService } from '../user/user.service';
 import { Logger } from '../logger/logger.service';
 import { JoinEventDto } from './dto/join-event.dto';
 import { LeaveEventDto } from './dto/leave-event.dto';
-import { WsExceptionHandler } from '../common/exception.handlers';
+import {HttpExceptionHandler, WsExceptionHandler} from '../common/exception.handlers';
+import {Scoreboard} from './type/scoreboard.type';
 
 @WebSocketGateway(4000, {
   cors: {
@@ -75,6 +76,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // broadcast event
     this.emitter.emit('event.refresh', result);
+    this.emitter.emit('event.scoreboard', {
+      event_id: data.event_id,
+      scoreboard: await this.eventService.scoreboard(data.event_id).catch(HttpExceptionHandler)
+    });
   }
 
   // TODO: implement data validation
@@ -108,5 +113,10 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @OnEvent('event.refresh')
   async refreshEventHandler(event: Event): Promise<void> {
     this.server.to(event.event_id).emit('event.refresh', event);
+  }
+
+  @OnEvent('event.scoreboard')
+  async refreshScoreboard(data: {event_id: string, scoreboard: Scoreboard}): Promise<void> {
+    this.server.to(data.event_id).emit('event.scoreboard', data.scoreboard);
   }
 }

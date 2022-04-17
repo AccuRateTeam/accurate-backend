@@ -34,6 +34,11 @@ export class EventService {
           include: {
             user: true
           }
+        },
+        event_user: {
+          include: {
+            user: true
+          }
         }
       }
     });
@@ -45,8 +50,12 @@ export class EventService {
     const targets = event.parcour.parcour_target.map((item) => item.target);
     const results = event.result;
     const output = {
-      targets: targets.map((item) => item.target_name),
-      users: {}
+      targets: targets.map((item) => ({
+        name: item.target_name,
+        id: item.target_id
+      })),
+      users: {},
+      finished: false
     };
 
     targets.forEach((target) => {
@@ -62,6 +71,8 @@ export class EventService {
         output.users[targetResult.user.user_id].scores.push(parseInt(targetResult.result_points));
       });
     });
+
+    output.finished = event.event_user.length === Object.keys(output.users).length;
 
     return output;
   }

@@ -9,6 +9,6 @@ export class CreateEventDto {
     parcour_id: string;
 
   @IsString({message: 'Es wurde kein Scoringsystem angegeben.'})
-  @IsIn(['DREIPFEIL'], {message: 'Ungültiges Scoringsystem.'})
+  @IsIn(['DREIPFEIL', 'ZWEIPFEIL'], {message: 'Ungültiges Scoringsystem.'})
     scoring_system: string;
 }
