@@ -8,6 +8,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import * as fs from 'fs';
 import express from 'express';
 import https from 'https';
+import { ExtendedSocketIoAdapter } from './common/extended-socket.adapter';
 
 dotenv.config();
 
