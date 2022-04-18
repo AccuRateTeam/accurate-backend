@@ -8,13 +8,14 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import * as fs from 'fs';
 import * as express from 'express';
 import * as https from 'https';
+import * as http from 'http';
 import { ExtendedSocketIoAdapter } from './common/extended-socket.adapter';
 
 dotenv.config();
 
 async function bootstrap() {
   // certs
-  let httpsOptions = {};
+  let httpsOptions = {key: undefined, cert: undefined};
   if (process.env.SSL === 'true') {
     const privateKey = fs.readFileSync('certs/privkey.pem', 'utf8');
     const certificate = fs.readFileSync('certs/cert.pem', 'utf8');
@@ -24,8 +25,10 @@ async function bootstrap() {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
-  const httpsServer = https.createServer(httpsOptions, server);
-  app.useWebSocketAdapter(new ExtendedSocketIoAdapter(httpsServer));
+  const httpsServer = process.env.SSL === 'true' ? https.createServer(httpsOptions, server) : http.createServer(server);
+  if (process.env.SSL === 'true') {
+    app.useWebSocketAdapter(new ExtendedSocketIoAdapter(httpsServer as https.Server));
+  }
 
   app.enableCors({
     origin: true,
