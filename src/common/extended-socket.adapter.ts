@@ -1,6 +1,6 @@
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import * as io from 'socket.io';
-import https from 'https';
+import * as https from 'https';
 
 export class ExtendedSocketIoAdapter extends IoAdapter {
     protected ioServer: io.Server;
