@@ -43,6 +43,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   await app.init();
-  httpsServer.listen(process.env.PORT);
+  httpsServer.listen(parseInt(process.env.PORT), '0.0.0.0', 100);
 }
 bootstrap();
