@@ -14,9 +14,12 @@ dotenv.config();
 
 async function bootstrap() {
   // certs
-  const privateKey = fs.readFileSync('certs/privkey.pem', 'utf8');
-  const certificate = fs.readFileSync('certs/cert.pem', 'utf8');
-  const httpsOptions = {key: privateKey, cert: certificate};
+  let httpsOptions = {};
+  if (process.env.SSL === 'true') {
+    const privateKey = fs.readFileSync('certs/privkey.pem', 'utf8');
+    const certificate = fs.readFileSync('certs/cert.pem', 'utf8');
+    httpsOptions = {key: privateKey, cert: certificate};
+  }
 
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
