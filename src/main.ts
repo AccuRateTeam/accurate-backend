@@ -21,12 +21,13 @@ async function bootstrap() {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
-  const httpsServer = https.createServer(httpsOptions);
+  const httpsServer = https.createServer(httpsOptions, server);
   app.useWebSocketAdapter(new ExtendedSocketIoAdapter(httpsServer));
 
   app.enableCors({
-    origin: '*',
-    methods: '*'
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
   });
   
   // custom logger
