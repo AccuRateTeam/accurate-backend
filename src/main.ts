@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 import { Logger } from './logger/logger.service';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as fs from 'fs';
-import express from 'express';
+import * as express from 'express';
 import https from 'https';
 import { ExtendedSocketIoAdapter } from './common/extended-socket.adapter';
 
