@@ -14,8 +14,8 @@ dotenv.config();
 
 async function bootstrap() {
   // certs
-  const privateKey = fs.readFileSync('certs/cert.pem', 'utf8');
-  const certificate = fs.readFileSync('certs/privkey.pem', 'utf8');
+  const privateKey = fs.readFileSync('certs/privkey.pem', 'utf8');
+  const certificate = fs.readFileSync('certs/cert.pem', 'utf8');
   const httpsOptions = {key: privateKey, cert: certificate};
 
   const server = express();
