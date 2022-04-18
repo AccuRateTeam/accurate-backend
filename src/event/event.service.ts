@@ -84,7 +84,14 @@ export class EventService {
   public async findEvent(eventId: string): Promise<event> {
     return await this.prisma.event.findFirst({
       where: {
-        event_id: eventId,
+        OR: [
+          {
+            event_id: eventId,
+          },
+          {
+            event_invite_code: eventId
+          }
+        ]
       },
       include: {
         parcour: true,
@@ -106,7 +113,8 @@ export class EventService {
       data: {
         event_name: eventDto.event_name,
         parcour_parcour_id: eventDto.parcour_id,
-        event_scoringsystem: eventDto.scoring_system
+        event_scoringsystem: eventDto.scoring_system,
+        event_invite_code: Math.floor(1000 + Math.random() * 9000).toString()
       },
     });
   }

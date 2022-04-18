@@ -14,6 +14,7 @@ model event {
   event_createtime    DateTime?    @default(now()) @db.DateTime(0)
   event_updatetime    DateTime?    @default(now()) @updatedAt @db.DateTime(0)
   event_scoringsystem String?      @db.VarChar(45)
+  event_invite_code   String?      @db.VarChar(4)
   parcour             parcour?     @relation(fields: [parcour_parcour_id], references: [parcour_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event_parcour")
   event_user          event_user[]
   result              result[]
