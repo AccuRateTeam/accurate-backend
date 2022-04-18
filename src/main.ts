@@ -4,11 +4,24 @@ import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import * as dotenv from 'dotenv';
 import { Logger } from './logger/logger.service';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import * as fs from 'fs';
+import express from 'express';
+import https from 'https';
 
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // certs
+  const privateKey = fs.readFileSync('certs/cert.pem', 'utf8');
+  const certificate = fs.readFileSync('certs/privkey.pem', 'utf8');
+  const httpsOptions = {key: privateKey, cert: certificate};
+
+  const server = express();
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+
+  const httpsServer = https.createServer(httpsOptions);
+  app.useWebSocketAdapter(new ExtendedSocketIoAdapter(httpsServer));
 
   app.enableCors({
     origin: '*',
@@ -28,6 +41,7 @@ async function bootstrap() {
   // use validation pipe
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(process.env.PORT);
+  await app.init();
+  httpsServer.listen(process.env.PORT);
 }
 bootstrap();
