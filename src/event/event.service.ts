@@ -81,7 +81,7 @@ export class EventService {
     return await this.prisma.event.findMany();
   }
 
-  public async findEvent(eventId: string): Promise<event> {
+  public async findEvent(eventId: string): Promise<any> {
     return await this.prisma.event.findFirst({
       where: {
         OR: [
@@ -94,12 +94,26 @@ export class EventService {
         ]
       },
       include: {
-        parcour: true,
+        parcour: {
+          include: {
+            parcour_target: {
+              include: {
+                target: true
+              }
+            }
+          }
+        },
         event_user: {
           include: {
             user: true,
           },
         },
+        result: {
+          include: {
+            user: true,
+            target: true
+          }
+        }
       },
     });
   }

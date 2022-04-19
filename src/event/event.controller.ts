@@ -100,4 +100,28 @@ export class EventController {
   async scoreboard(@Param('id') id: string): Promise<Scoreboard> {
     return await this.eventService.scoreboard(id).catch(HttpExceptionHandler);
   }
+
+  @UseGuards(HttpGuard)
+  @Get(':id/my-scoreboard')
+  async myScoreboard(@Param('id') id: string, @AuthzId() authId): Promise<any> {
+    const user = await this.userService.findUser(authId);
+    const scoreboard = await this.eventService.scoreboard(id).catch(HttpExceptionHandler);
+    const event = await this.eventService.findEvent(id).catch(HttpExceptionHandler);
+    const targets = [];
+
+    return scoreboard;
+    Object.keys(scoreboard.users).forEach((userId) => {
+      if (!targets[userId]) {
+        targets[userId] = [];
+      }
+      targets[userId].push({
+        targets: scoreboard.users[userId].scores.map((score, i) => ({
+          target: scoreboard.targets[i].name,
+          score: score
+        }))
+      });
+    });
+
+    return scoreboard;
+  }
 }

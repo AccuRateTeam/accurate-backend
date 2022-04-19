@@ -22,6 +22,8 @@ import { PublicUser } from './serializers/public-user.serializer';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @UseGuards(HttpGuard)
+  @Get(':id')
   async findUser(@Param('id') id: string): Promise<PublicUser> {
     const user = await this.userService.findUser(id);
     if (!user)
